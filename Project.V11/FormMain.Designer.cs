@@ -315,11 +315,13 @@
             // 
             // dataGridViewOut_LSE
             // 
+            dataGridViewOut_LSE.AllowUserToOrderColumns = true;
             dataGridViewOut_LSE.BackgroundColor = Color.White;
             dataGridViewOut_LSE.BorderStyle = BorderStyle.None;
             dataGridViewOut_LSE.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewOut_LSE.Dock = DockStyle.Fill;
             dataGridViewOut_LSE.Location = new Point(5, 5);
+            dataGridViewOut_LSE.MultiSelect = false;
             dataGridViewOut_LSE.Name = "dataGridViewOut_LSE";
             dataGridViewOut_LSE.RowHeadersVisible = false;
             dataGridViewOut_LSE.Size = new Size(534, 671);
