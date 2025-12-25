@@ -1,8 +1,9 @@
 using OxyPlot;
-using OxyPlot.Series;
 using OxyPlot.Axes;
+using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using Project.V11.Lib;
+using System.Data;
 using System.Text;
 
 namespace Project.V11
@@ -58,14 +59,16 @@ namespace Project.V11
                     }
                 }
 
-                UpdateStatistics_LSE();
-                UpdateChart_LSE();
                 buttonSaveFile_LSE.Enabled = true;
                 buttonAdd_LSE.Enabled = true;
                 buttonDelete_LSE.Enabled = true;
                 buttonSearch_LSE.Enabled = true;
                 buttonSaveStat_LSE.Enabled = true;
                 textBoxSearch_LSE.Enabled = true;
+
+                UpdateStatistics_LSE();
+                UpdateChart_LSE();
+                UpdateFilters_LSE();
             }
             catch (Exception ex)
             {
@@ -119,22 +122,56 @@ namespace Project.V11
             }
         }
 
-        private void buttonAdd_LSE_Click(object sender, EventArgs e)
+        private void buttonSaveStat_LSE_Click(object sender, EventArgs e)
         {
-            dataGridViewOut_LSE.Rows.Add();
+            using var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "PNG Image|*.png|PDF File|*.pdf";
+            saveFileDialog.FileName = "Chart_LSE.png";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var pngExporter = new PngExporter { Width = 800, Height = 600 };
+                pngExporter.ExportToFile(chartDiag_LSE.Model, saveFileDialog.FileName);
+                MessageBox.Show("График успешно сохранен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
-        private void buttonDelete_LSE_Click(object sender, EventArgs e)
+        private void dataGridViewOut_LSE_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridViewOut_LSE.CurrentRow != null && !dataGridViewOut_LSE.CurrentRow.IsNewRow)
+            UpdateStatistics_LSE();
+            UpdateChart_LSE();
+            UpdateFilters_LSE();
+        }
+
+        private void buttonHelp_LSE_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Программа: Отдел кадров\nРазработчик: Ляпин С.Е.\nВерсия: 1.0\n\nРуководство:\nИспользуйте кнопки меню для загрузки, изменения, поиска и сохранения данных. График и статистика строится автоматически по данным оклада.", "О программе", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void buttonApplyFilter_Click(object sender, EventArgs e)
+        {
+            string selectedPos = comboBoxPosition_LSE.Text;
+            string selectedDept = comboBoxDepartment_LSE.Text;
+
+            foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
             {
-                var result = MessageBox.Show("Удалить выбранную строку?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
+                if (row.IsNewRow) continue;
+
+                bool isVisible = true;
+
+                string rowPos = row.Cells[4].Value?.ToString();
+                if (selectedPos != "Все" && rowPos != selectedPos)
                 {
-                    dataGridViewOut_LSE.Rows.Remove(dataGridViewOut_LSE.CurrentRow);
-                    UpdateStatistics_LSE();
-                    UpdateChart_LSE();
+                    isVisible = false;
                 }
+
+                string rowDept = row.Cells[5].Value?.ToString();
+                if (isVisible && selectedDept != "Все" && rowDept != selectedDept)
+                {
+                    isVisible = false;
+                }
+
+                row.Visible = isVisible;
             }
         }
 
@@ -160,9 +197,51 @@ namespace Project.V11
             }
         }
 
-        private void buttonHelp_LSE_Click(object sender, EventArgs e)
+        private void buttonAdd_LSE_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Программа: Отдел кадров\nРазработчик: Ляпин С.Е.\nВерсия: 1.0\n\nРуководство:\nИспользуйте кнопки меню для загрузки, изменения, поиска и сохранения данных. График и статистика строится автоматически по данным оклада.", "О программе", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            dataGridViewOut_LSE.Rows.Add();
+        }
+
+        private void buttonDelete_LSE_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewOut_LSE.CurrentRow != null && !dataGridViewOut_LSE.CurrentRow.IsNewRow)
+            {
+                var result = MessageBox.Show("Удалить выбранную строку?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    dataGridViewOut_LSE.Rows.Remove(dataGridViewOut_LSE.CurrentRow);
+                    UpdateStatistics_LSE();
+                    UpdateChart_LSE();
+                    UpdateFilters_LSE();
+                }
+            }
+        }
+
+        private void UpdateFilters_LSE()
+        {
+            comboBoxPosition_LSE.Items.Clear();
+            comboBoxDepartment_LSE.Items.Clear();
+            comboBoxPosition_LSE.Items.Add("Все");
+            comboBoxDepartment_LSE.Items.Add("Все");
+            comboBoxPosition_LSE.SelectedIndex = 0;
+            comboBoxDepartment_LSE.SelectedIndex = 0;
+
+            foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                var posValue = row.Cells[4].Value?.ToString();
+                if (posValue != null && !comboBoxPosition_LSE.Items.Contains(posValue))
+                {
+                    comboBoxPosition_LSE.Items.Add(posValue);
+                }
+
+                var deptValue = row.Cells[5].Value?.ToString();
+                if (deptValue != null && !comboBoxDepartment_LSE.Items.Contains(deptValue))
+                {
+                    comboBoxDepartment_LSE.Items.Add(deptValue);
+                }
+            }
         }
 
         private void UpdateStatistics_LSE()
@@ -272,26 +351,6 @@ namespace Project.V11
 
             model.Series.Add(series);
             chartDiag_LSE.Model = model;
-        }
-
-        private void dataGridViewOut_LSE_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            UpdateStatistics_LSE();
-            UpdateChart_LSE();
-        }
-
-        private void buttonSaveStat_LSE_Click(object sender, EventArgs e)
-        {
-            using var saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "PNG Image|*.png|PDF File|*.pdf";
-            saveFileDialog.FileName = "Chart_LSE.png";
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                var pngExporter = new PngExporter { Width = 800, Height = 600 };
-                pngExporter.ExportToFile(chartDiag_LSE.Model, saveFileDialog.FileName);
-                MessageBox.Show("График успешно сохранен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
         }
     }
 }

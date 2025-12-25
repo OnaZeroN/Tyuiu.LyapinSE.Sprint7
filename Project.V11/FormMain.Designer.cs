@@ -30,6 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             panelLeft_LSE = new Panel();
+            groupBox1 = new GroupBox();
+            buttonApplyFilters_LSE = new Button();
+            label3 = new Label();
+            comboBoxDepartment_LSE = new ComboBox();
+            label2 = new Label();
+            comboBoxPosition_LSE = new ComboBox();
+            panel2 = new Panel();
             buttonHelp_LSE = new Button();
             groupBoxEdit_LSE = new GroupBox();
             buttonDelete_LSE = new Button();
@@ -56,6 +63,7 @@
             saveFileDialog_LSE = new SaveFileDialog();
             toolTip_LSE = new ToolTip(components);
             panelLeft_LSE.SuspendLayout();
+            groupBox1.SuspendLayout();
             groupBoxEdit_LSE.SuspendLayout();
             groupBoxFilter_LSE.SuspendLayout();
             panelRight_LSE.SuspendLayout();
@@ -68,6 +76,8 @@
             // panelLeft_LSE
             // 
             panelLeft_LSE.BackColor = Color.WhiteSmoke;
+            panelLeft_LSE.Controls.Add(groupBox1);
+            panelLeft_LSE.Controls.Add(panel2);
             panelLeft_LSE.Controls.Add(buttonHelp_LSE);
             panelLeft_LSE.Controls.Add(groupBoxEdit_LSE);
             panelLeft_LSE.Controls.Add(panelFill2_LSE);
@@ -82,6 +92,77 @@
             panelLeft_LSE.Padding = new Padding(5);
             panelLeft_LSE.Size = new Size(220, 681);
             panelLeft_LSE.TabIndex = 1;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(buttonApplyFilters_LSE);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(comboBoxDepartment_LSE);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(comboBoxPosition_LSE);
+            groupBox1.Dock = DockStyle.Top;
+            groupBox1.Location = new Point(5, 345);
+            groupBox1.Margin = new Padding(0);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(5);
+            groupBox1.Size = new Size(210, 154);
+            groupBox1.TabIndex = 16;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Фильтрация";
+            // 
+            // buttonApplyFilters_LSE
+            // 
+            buttonApplyFilters_LSE.Cursor = Cursors.Hand;
+            buttonApplyFilters_LSE.Dock = DockStyle.Bottom;
+            buttonApplyFilters_LSE.Location = new Point(5, 114);
+            buttonApplyFilters_LSE.Name = "buttonApplyFilters_LSE";
+            buttonApplyFilters_LSE.Size = new Size(200, 35);
+            buttonApplyFilters_LSE.TabIndex = 7;
+            buttonApplyFilters_LSE.Text = "✅ Применить";
+            buttonApplyFilters_LSE.UseVisualStyleBackColor = true;
+            buttonApplyFilters_LSE.Click += buttonApplyFilter_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(5, 63);
+            label3.Name = "label3";
+            label3.Size = new Size(40, 15);
+            label3.TabIndex = 5;
+            label3.Text = "Отдел";
+            // 
+            // comboBoxDepartment_LSE
+            // 
+            comboBoxDepartment_LSE.FormattingEnabled = true;
+            comboBoxDepartment_LSE.Location = new Point(8, 81);
+            comboBoxDepartment_LSE.Name = "comboBoxDepartment_LSE";
+            comboBoxDepartment_LSE.Size = new Size(121, 23);
+            comboBoxDepartment_LSE.TabIndex = 4;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(8, 19);
+            label2.Name = "label2";
+            label2.Size = new Size(69, 15);
+            label2.TabIndex = 3;
+            label2.Text = "Должность";
+            // 
+            // comboBoxPosition_LSE
+            // 
+            comboBoxPosition_LSE.FormattingEnabled = true;
+            comboBoxPosition_LSE.Location = new Point(8, 37);
+            comboBoxPosition_LSE.Name = "comboBoxPosition_LSE";
+            comboBoxPosition_LSE.Size = new Size(121, 23);
+            comboBoxPosition_LSE.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(5, 335);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(210, 10);
+            panel2.TabIndex = 15;
             // 
             // buttonHelp_LSE
             // 
@@ -350,6 +431,8 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Спринт 7 | Вариант 11 | Отдел кадров | Ляпин C.E.";
             panelLeft_LSE.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             groupBoxEdit_LSE.ResumeLayout(false);
             groupBoxFilter_LSE.ResumeLayout(false);
             groupBoxFilter_LSE.PerformLayout();
@@ -389,5 +472,12 @@
         private GroupBox groupBoxStats_LSE;
         private Label labelStats_LSE;
         private Label label1;
+        private GroupBox groupBox1;
+        private Panel panel2;
+        private ComboBox comboBoxPosition_LSE;
+        private Label label2;
+        private Label label3;
+        private ComboBox comboBoxDepartment_LSE;
+        private Button buttonApplyFilters_LSE;
     }
 }
