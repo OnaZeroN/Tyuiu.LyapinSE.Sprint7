@@ -30,36 +30,43 @@
         {
             components = new System.ComponentModel.Container();
             panelLeft_LSE = new Panel();
+            groupBoxFilter_LSE = new GroupBox();
+            buttonApplyFilters_LSE = new Button();
+            labelDepartment_LSE = new Label();
+            comboBoxDepartment_LSE = new ComboBox();
+            labelPosition_LSE = new Label();
+            comboBoxPosition_LSE = new ComboBox();
+            panelFillEdit_LSE = new Panel();
             buttonHelp_LSE = new Button();
             groupBoxEdit_LSE = new GroupBox();
             buttonDelete_LSE = new Button();
             buttonAdd_LSE = new Button();
-            panelFill2_LSE = new Panel();
-            groupBoxFilter_LSE = new GroupBox();
+            panelFillSearch_LSE = new Panel();
+            groupBoxSearch_LSE = new GroupBox();
             buttonSearch_LSE = new Button();
-            panel3 = new Panel();
+            panelFillSearchBox_LSE = new Panel();
             textBoxSearch_LSE = new TextBox();
-            panelFill1_LSE = new Panel();
+            panelFillSave_LSE = new Panel();
             buttonSaveFile_LSE = new Button();
-            panel4 = new Panel();
+            panelFillOpen_LSE = new Panel();
             buttonOpenFile_LSE = new Button();
             panelRight_LSE = new Panel();
             chartDiag_LSE = new OxyPlot.WindowsForms.PlotView();
-            panel1 = new Panel();
+            panelStat_LSE = new Panel();
             buttonSaveStat_LSE = new Button();
             groupBoxStats_LSE = new GroupBox();
             labelStats_LSE = new Label();
-            label1 = new Label();
             panelFill_LSE = new Panel();
             dataGridViewOut_LSE = new DataGridView();
             openFileDialog_LSE = new OpenFileDialog();
             saveFileDialog_LSE = new SaveFileDialog();
             toolTip_LSE = new ToolTip(components);
             panelLeft_LSE.SuspendLayout();
-            groupBoxEdit_LSE.SuspendLayout();
             groupBoxFilter_LSE.SuspendLayout();
+            groupBoxEdit_LSE.SuspendLayout();
+            groupBoxSearch_LSE.SuspendLayout();
             panelRight_LSE.SuspendLayout();
-            panel1.SuspendLayout();
+            panelStat_LSE.SuspendLayout();
             groupBoxStats_LSE.SuspendLayout();
             panelFill_LSE.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewOut_LSE).BeginInit();
@@ -68,13 +75,15 @@
             // panelLeft_LSE
             // 
             panelLeft_LSE.BackColor = Color.WhiteSmoke;
+            panelLeft_LSE.Controls.Add(groupBoxFilter_LSE);
+            panelLeft_LSE.Controls.Add(panelFillEdit_LSE);
             panelLeft_LSE.Controls.Add(buttonHelp_LSE);
             panelLeft_LSE.Controls.Add(groupBoxEdit_LSE);
-            panelLeft_LSE.Controls.Add(panelFill2_LSE);
-            panelLeft_LSE.Controls.Add(groupBoxFilter_LSE);
-            panelLeft_LSE.Controls.Add(panelFill1_LSE);
+            panelLeft_LSE.Controls.Add(panelFillSearch_LSE);
+            panelLeft_LSE.Controls.Add(groupBoxSearch_LSE);
+            panelLeft_LSE.Controls.Add(panelFillSave_LSE);
             panelLeft_LSE.Controls.Add(buttonSaveFile_LSE);
-            panelLeft_LSE.Controls.Add(panel4);
+            panelLeft_LSE.Controls.Add(panelFillOpen_LSE);
             panelLeft_LSE.Controls.Add(buttonOpenFile_LSE);
             panelLeft_LSE.Dock = DockStyle.Left;
             panelLeft_LSE.Location = new Point(0, 0);
@@ -82,6 +91,77 @@
             panelLeft_LSE.Padding = new Padding(5);
             panelLeft_LSE.Size = new Size(220, 681);
             panelLeft_LSE.TabIndex = 1;
+            // 
+            // groupBoxFilter_LSE
+            // 
+            groupBoxFilter_LSE.Controls.Add(buttonApplyFilters_LSE);
+            groupBoxFilter_LSE.Controls.Add(labelDepartment_LSE);
+            groupBoxFilter_LSE.Controls.Add(comboBoxDepartment_LSE);
+            groupBoxFilter_LSE.Controls.Add(labelPosition_LSE);
+            groupBoxFilter_LSE.Controls.Add(comboBoxPosition_LSE);
+            groupBoxFilter_LSE.Dock = DockStyle.Top;
+            groupBoxFilter_LSE.Location = new Point(5, 345);
+            groupBoxFilter_LSE.Margin = new Padding(0);
+            groupBoxFilter_LSE.Name = "groupBoxFilter_LSE";
+            groupBoxFilter_LSE.Padding = new Padding(5);
+            groupBoxFilter_LSE.Size = new Size(210, 154);
+            groupBoxFilter_LSE.TabIndex = 16;
+            groupBoxFilter_LSE.TabStop = false;
+            groupBoxFilter_LSE.Text = "Фильтрация";
+            // 
+            // buttonApplyFilters_LSE
+            // 
+            buttonApplyFilters_LSE.Cursor = Cursors.Hand;
+            buttonApplyFilters_LSE.Dock = DockStyle.Bottom;
+            buttonApplyFilters_LSE.Location = new Point(5, 114);
+            buttonApplyFilters_LSE.Name = "buttonApplyFilters_LSE";
+            buttonApplyFilters_LSE.Size = new Size(200, 35);
+            buttonApplyFilters_LSE.TabIndex = 7;
+            buttonApplyFilters_LSE.Text = "✅ Применить";
+            buttonApplyFilters_LSE.UseVisualStyleBackColor = true;
+            buttonApplyFilters_LSE.Click += buttonApplyFilter_Click;
+            // 
+            // labelDepartment_LSE
+            // 
+            labelDepartment_LSE.AutoSize = true;
+            labelDepartment_LSE.Location = new Point(5, 63);
+            labelDepartment_LSE.Name = "labelDepartment_LSE";
+            labelDepartment_LSE.Size = new Size(40, 15);
+            labelDepartment_LSE.TabIndex = 5;
+            labelDepartment_LSE.Text = "Отдел";
+            // 
+            // comboBoxDepartment_LSE
+            // 
+            comboBoxDepartment_LSE.FormattingEnabled = true;
+            comboBoxDepartment_LSE.Location = new Point(8, 81);
+            comboBoxDepartment_LSE.Name = "comboBoxDepartment_LSE";
+            comboBoxDepartment_LSE.Size = new Size(121, 23);
+            comboBoxDepartment_LSE.TabIndex = 4;
+            // 
+            // labelPosition_LSE
+            // 
+            labelPosition_LSE.AutoSize = true;
+            labelPosition_LSE.Location = new Point(8, 19);
+            labelPosition_LSE.Name = "labelPosition_LSE";
+            labelPosition_LSE.Size = new Size(69, 15);
+            labelPosition_LSE.TabIndex = 3;
+            labelPosition_LSE.Text = "Должность";
+            // 
+            // comboBoxPosition_LSE
+            // 
+            comboBoxPosition_LSE.FormattingEnabled = true;
+            comboBoxPosition_LSE.Location = new Point(8, 37);
+            comboBoxPosition_LSE.Name = "comboBoxPosition_LSE";
+            comboBoxPosition_LSE.Size = new Size(121, 23);
+            comboBoxPosition_LSE.TabIndex = 2;
+            // 
+            // panelFillEdit_LSE
+            // 
+            panelFillEdit_LSE.Dock = DockStyle.Top;
+            panelFillEdit_LSE.Location = new Point(5, 335);
+            panelFillEdit_LSE.Name = "panelFillEdit_LSE";
+            panelFillEdit_LSE.Size = new Size(210, 10);
+            panelFillEdit_LSE.TabIndex = 15;
             // 
             // buttonHelp_LSE
             // 
@@ -134,27 +214,27 @@
             buttonAdd_LSE.UseVisualStyleBackColor = true;
             buttonAdd_LSE.Click += buttonAdd_LSE_Click;
             // 
-            // panelFill2_LSE
+            // panelFillSearch_LSE
             // 
-            panelFill2_LSE.Dock = DockStyle.Top;
-            panelFill2_LSE.Location = new Point(5, 225);
-            panelFill2_LSE.Name = "panelFill2_LSE";
-            panelFill2_LSE.Size = new Size(210, 10);
-            panelFill2_LSE.TabIndex = 11;
+            panelFillSearch_LSE.Dock = DockStyle.Top;
+            panelFillSearch_LSE.Location = new Point(5, 225);
+            panelFillSearch_LSE.Name = "panelFillSearch_LSE";
+            panelFillSearch_LSE.Size = new Size(210, 10);
+            panelFillSearch_LSE.TabIndex = 11;
             // 
-            // groupBoxFilter_LSE
+            // groupBoxSearch_LSE
             // 
-            groupBoxFilter_LSE.Controls.Add(buttonSearch_LSE);
-            groupBoxFilter_LSE.Controls.Add(panel3);
-            groupBoxFilter_LSE.Controls.Add(textBoxSearch_LSE);
-            groupBoxFilter_LSE.Dock = DockStyle.Top;
-            groupBoxFilter_LSE.Location = new Point(5, 125);
-            groupBoxFilter_LSE.Name = "groupBoxFilter_LSE";
-            groupBoxFilter_LSE.Padding = new Padding(5);
-            groupBoxFilter_LSE.Size = new Size(210, 100);
-            groupBoxFilter_LSE.TabIndex = 10;
-            groupBoxFilter_LSE.TabStop = false;
-            groupBoxFilter_LSE.Text = "Поиск";
+            groupBoxSearch_LSE.Controls.Add(buttonSearch_LSE);
+            groupBoxSearch_LSE.Controls.Add(panelFillSearchBox_LSE);
+            groupBoxSearch_LSE.Controls.Add(textBoxSearch_LSE);
+            groupBoxSearch_LSE.Dock = DockStyle.Top;
+            groupBoxSearch_LSE.Location = new Point(5, 125);
+            groupBoxSearch_LSE.Name = "groupBoxSearch_LSE";
+            groupBoxSearch_LSE.Padding = new Padding(5);
+            groupBoxSearch_LSE.Size = new Size(210, 100);
+            groupBoxSearch_LSE.TabIndex = 10;
+            groupBoxSearch_LSE.TabStop = false;
+            groupBoxSearch_LSE.Text = "Поиск";
             // 
             // buttonSearch_LSE
             // 
@@ -168,13 +248,13 @@
             buttonSearch_LSE.UseVisualStyleBackColor = true;
             buttonSearch_LSE.Click += buttonSearch_LSE_Click;
             // 
-            // panel3
+            // panelFillSearchBox_LSE
             // 
-            panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(5, 44);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(200, 10);
-            panel3.TabIndex = 5;
+            panelFillSearchBox_LSE.Dock = DockStyle.Top;
+            panelFillSearchBox_LSE.Location = new Point(5, 44);
+            panelFillSearchBox_LSE.Name = "panelFillSearchBox_LSE";
+            panelFillSearchBox_LSE.Size = new Size(200, 10);
+            panelFillSearchBox_LSE.TabIndex = 5;
             // 
             // textBoxSearch_LSE
             // 
@@ -185,13 +265,13 @@
             textBoxSearch_LSE.Size = new Size(200, 23);
             textBoxSearch_LSE.TabIndex = 0;
             // 
-            // panelFill1_LSE
+            // panelFillSave_LSE
             // 
-            panelFill1_LSE.Dock = DockStyle.Top;
-            panelFill1_LSE.Location = new Point(5, 115);
-            panelFill1_LSE.Name = "panelFill1_LSE";
-            panelFill1_LSE.Size = new Size(210, 10);
-            panelFill1_LSE.TabIndex = 9;
+            panelFillSave_LSE.Dock = DockStyle.Top;
+            panelFillSave_LSE.Location = new Point(5, 115);
+            panelFillSave_LSE.Name = "panelFillSave_LSE";
+            panelFillSave_LSE.Size = new Size(210, 10);
+            panelFillSave_LSE.TabIndex = 9;
             // 
             // buttonSaveFile_LSE
             // 
@@ -206,13 +286,13 @@
             buttonSaveFile_LSE.UseVisualStyleBackColor = false;
             buttonSaveFile_LSE.Click += buttonSaveFile_LSE_Click;
             // 
-            // panel4
+            // panelFillOpen_LSE
             // 
-            panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(5, 55);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(210, 10);
-            panel4.TabIndex = 7;
+            panelFillOpen_LSE.Dock = DockStyle.Top;
+            panelFillOpen_LSE.Location = new Point(5, 55);
+            panelFillOpen_LSE.Name = "panelFillOpen_LSE";
+            panelFillOpen_LSE.Size = new Size(210, 10);
+            panelFillOpen_LSE.TabIndex = 7;
             // 
             // buttonOpenFile_LSE
             // 
@@ -231,7 +311,7 @@
             // 
             panelRight_LSE.BackColor = Color.WhiteSmoke;
             panelRight_LSE.Controls.Add(chartDiag_LSE);
-            panelRight_LSE.Controls.Add(panel1);
+            panelRight_LSE.Controls.Add(panelStat_LSE);
             panelRight_LSE.Dock = DockStyle.Right;
             panelRight_LSE.Location = new Point(764, 0);
             panelRight_LSE.Name = "panelRight_LSE";
@@ -252,15 +332,15 @@
             chartDiag_LSE.ZoomRectangleCursor = Cursors.SizeNWSE;
             chartDiag_LSE.ZoomVerticalCursor = Cursors.SizeNS;
             // 
-            // panel1
+            // panelStat_LSE
             // 
-            panel1.Controls.Add(buttonSaveStat_LSE);
-            panel1.Controls.Add(groupBoxStats_LSE);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(5, 5);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(490, 100);
-            panel1.TabIndex = 5;
+            panelStat_LSE.Controls.Add(buttonSaveStat_LSE);
+            panelStat_LSE.Controls.Add(groupBoxStats_LSE);
+            panelStat_LSE.Dock = DockStyle.Top;
+            panelStat_LSE.Location = new Point(5, 5);
+            panelStat_LSE.Name = "panelStat_LSE";
+            panelStat_LSE.Size = new Size(490, 100);
+            panelStat_LSE.TabIndex = 5;
             // 
             // buttonSaveStat_LSE
             // 
@@ -278,7 +358,6 @@
             // groupBoxStats_LSE
             // 
             groupBoxStats_LSE.Controls.Add(labelStats_LSE);
-            groupBoxStats_LSE.Controls.Add(label1);
             groupBoxStats_LSE.Dock = DockStyle.Left;
             groupBoxStats_LSE.Location = new Point(0, 0);
             groupBoxStats_LSE.Name = "groupBoxStats_LSE";
@@ -294,14 +373,6 @@
             labelStats_LSE.Name = "labelStats_LSE";
             labelStats_LSE.Size = new Size(0, 15);
             labelStats_LSE.TabIndex = 7;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(171, 74);
-            label1.Name = "label1";
-            label1.Size = new Size(0, 15);
-            label1.TabIndex = 6;
             // 
             // panelFill_LSE
             // 
@@ -350,11 +421,13 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Спринт 7 | Вариант 11 | Отдел кадров | Ляпин C.E.";
             panelLeft_LSE.ResumeLayout(false);
-            groupBoxEdit_LSE.ResumeLayout(false);
             groupBoxFilter_LSE.ResumeLayout(false);
             groupBoxFilter_LSE.PerformLayout();
+            groupBoxEdit_LSE.ResumeLayout(false);
+            groupBoxSearch_LSE.ResumeLayout(false);
+            groupBoxSearch_LSE.PerformLayout();
             panelRight_LSE.ResumeLayout(false);
-            panel1.ResumeLayout(false);
+            panelStat_LSE.ResumeLayout(false);
             groupBoxStats_LSE.ResumeLayout(false);
             groupBoxStats_LSE.PerformLayout();
             panelFill_LSE.ResumeLayout(false);
@@ -370,24 +443,30 @@
         private GroupBox groupBoxEdit_LSE;
         private Button buttonDelete_LSE;
         private Button buttonAdd_LSE;
-        private Panel panelFill2_LSE;
-        private GroupBox groupBoxFilter_LSE;
+        private Panel panelFillSearch_LSE;
+        private GroupBox groupBoxSearch_LSE;
         private Button buttonSearch_LSE;
-        private Panel panel3;
+        private Panel panelFillSearchBox_LSE;
         private TextBox textBoxSearch_LSE;
-        private Panel panelFill1_LSE;
+        private Panel panelFillSave_LSE;
         private Button buttonSaveFile_LSE;
-        private Panel panel4;
+        private Panel panelFillOpen_LSE;
         private Button buttonOpenFile_LSE;
         private Button buttonHelp_LSE;
         private OpenFileDialog openFileDialog_LSE;
         private SaveFileDialog saveFileDialog_LSE;
         private ToolTip toolTip_LSE;
         private OxyPlot.WindowsForms.PlotView chartDiag_LSE;
-        private Panel panel1;
+        private Panel panelStat_LSE;
         private Button buttonSaveStat_LSE;
+        private GroupBox groupBoxFilter_LSE;
+        private Panel panelFillEdit_LSE;
+        private ComboBox comboBoxPosition_LSE;
+        private Label labelPosition_LSE;
+        private Label labelDepartment_LSE;
+        private ComboBox comboBoxDepartment_LSE;
+        private Button buttonApplyFilters_LSE;
         private GroupBox groupBoxStats_LSE;
         private Label labelStats_LSE;
-        private Label label1;
     }
 }

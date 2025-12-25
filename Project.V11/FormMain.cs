@@ -1,8 +1,9 @@
 using OxyPlot;
-using OxyPlot.Series;
 using OxyPlot.Axes;
+using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using Project.V11.Lib;
+using System.Data;
 using System.Text;
 
 namespace Project.V11
@@ -16,8 +17,14 @@ namespace Project.V11
             InitializeComponent();
 
             toolTip_LSE.SetToolTip(buttonOpenFile_LSE, "Открыть файл CSV с базой данных");
+            toolTip_LSE.SetToolTip(buttonSearch_LSE, "Применить поиск");
             toolTip_LSE.SetToolTip(buttonSaveFile_LSE, "Сохранить текущую таблицу в файл");
             toolTip_LSE.SetToolTip(buttonAdd_LSE, "Добавить пустую строку для ввода");
+            toolTip_LSE.SetToolTip(buttonDelete_LSE, "Удалить строку");
+            toolTip_LSE.SetToolTip(comboBoxPosition_LSE, "Отображать только записи с определенной должностью");
+            toolTip_LSE.SetToolTip(comboBoxDepartment_LSE, "Отображать только записи с определенным отделом");
+            toolTip_LSE.SetToolTip(buttonApplyFilters_LSE, "Применить фильтры");
+            toolTip_LSE.SetToolTip(buttonSaveStat_LSE, "Экспортировать график");
 
             dataGridViewOut_LSE.AllowUserToAddRows = false;
             dataGridViewOut_LSE.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -28,6 +35,9 @@ namespace Project.V11
             buttonSearch_LSE.Enabled = false;
             textBoxSearch_LSE.Enabled = false;
             buttonSaveStat_LSE.Enabled = false;
+            comboBoxPosition_LSE.Enabled = false;
+            comboBoxDepartment_LSE.Enabled = false;
+            buttonApplyFilters_LSE.Enabled = false;
         }
 
         private void buttonOpenFile_LSE_Click(object sender, EventArgs e)
@@ -42,12 +52,14 @@ namespace Project.V11
                 int rows = matrix.GetLength(0);
                 int cols = matrix.GetLength(1);
 
+
                 dataGridViewOut_LSE.RowCount = rows - 1;
                 dataGridViewOut_LSE.ColumnCount = cols;
 
                 for (int c = 0; c < cols; c++)
                 {
                     dataGridViewOut_LSE.Columns[c].HeaderText = matrix[0, c];
+
                 }
 
                 for (int r = 1; r < rows; r++)
@@ -58,14 +70,20 @@ namespace Project.V11
                     }
                 }
 
-                UpdateStatistics_LSE();
-                UpdateChart_LSE();
                 buttonSaveFile_LSE.Enabled = true;
                 buttonAdd_LSE.Enabled = true;
                 buttonDelete_LSE.Enabled = true;
                 buttonSearch_LSE.Enabled = true;
                 buttonSaveStat_LSE.Enabled = true;
                 textBoxSearch_LSE.Enabled = true;
+                comboBoxPosition_LSE.Enabled = true;
+                comboBoxDepartment_LSE.Enabled = true;
+                buttonApplyFilters_LSE.Enabled = true;
+
+                ResetFilters();
+                UpdateStatistics_LSE();
+                UpdateChart_LSE();
+                UpdateFilters_LSE();
             }
             catch (Exception ex)
             {
@@ -77,7 +95,8 @@ namespace Project.V11
         {
             saveFileDialog_LSE.FileName = "OutPutFileTask7.csv";
             saveFileDialog_LSE.InitialDirectory = Directory.GetCurrentDirectory();
-            saveFileDialog_LSE.ShowDialog();
+
+            if (saveFileDialog_LSE.ShowDialog() != DialogResult.OK) return;
 
             if (string.IsNullOrEmpty(saveFileDialog_LSE.FileName)) return;
 
@@ -85,32 +104,30 @@ namespace Project.V11
             {
                 int rows = dataGridViewOut_LSE.RowCount;
                 int cols = dataGridViewOut_LSE.ColumnCount;
-                string header = "";
+                string[,] matrix = new string[rows + 1, cols];
 
-                for (int i = 0; i < cols; i++)
+                for (int j = 0; j < cols; j++)
                 {
-                    header += dataGridViewOut_LSE.Columns[i].HeaderText + ";";
+                    matrix[0, j] = dataGridViewOut_LSE.Columns[j].HeaderText;
                 }
-                header = header.TrimEnd(';');
-
-                StringBuilder strBuilder = new StringBuilder();
-                strBuilder.AppendLine(header);
 
                 for (int i = 0; i < rows; i++)
                 {
-                    string str = "";
                     for (int j = 0; j < cols; j++)
                     {
                         if (dataGridViewOut_LSE.Rows[i].Cells[j].Value != null)
-                            str += dataGridViewOut_LSE.Rows[i].Cells[j].Value.ToString() + ";";
+                        {
+                            matrix[i + 1, j] = dataGridViewOut_LSE.Rows[i].Cells[j].Value.ToString();
+                        }
                         else
-                            str += ";";
+                        {
+                            matrix[i + 1, j] = "";
+                        }
                     }
-                    str = str.TrimEnd(';');
-                    strBuilder.AppendLine(str);
                 }
 
-                File.WriteAllText(saveFileDialog_LSE.FileName, strBuilder.ToString(), Encoding.UTF8); // Или Encoding.GetEncoding(1251) для Windows
+                ds.SaveData(saveFileDialog_LSE.FileName, matrix);
+
                 MessageBox.Show("Файл успешно сохранен!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -119,22 +136,56 @@ namespace Project.V11
             }
         }
 
-        private void buttonAdd_LSE_Click(object sender, EventArgs e)
+        private void buttonSaveStat_LSE_Click(object sender, EventArgs e)
         {
-            dataGridViewOut_LSE.Rows.Add();
+            using var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "PNG Image|*.png|PDF File|*.pdf";
+            saveFileDialog.FileName = "Chart_LSE.png";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var pngExporter = new PngExporter { Width = 800, Height = 600 };
+                pngExporter.ExportToFile(chartDiag_LSE.Model, saveFileDialog.FileName);
+                MessageBox.Show("График успешно сохранен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
-        private void buttonDelete_LSE_Click(object sender, EventArgs e)
+        private void dataGridViewOut_LSE_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridViewOut_LSE.CurrentRow != null && !dataGridViewOut_LSE.CurrentRow.IsNewRow)
+            UpdateStatistics_LSE();
+            UpdateChart_LSE();
+            UpdateFilters_LSE();
+        }
+
+        private void buttonHelp_LSE_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Программа: Отдел кадров\nРазработчик: Ляпин С.Е.\nВерсия: 1.0\n\nРуководство:\nИспользуйте кнопки меню для загрузки, изменения, поиска и сохранения данных. График и статистика строится автоматически по данным оклада.", "О программе", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void buttonApplyFilter_Click(object sender, EventArgs e)
+        {
+            string selectedPos = comboBoxPosition_LSE.Text;
+            string selectedDept = comboBoxDepartment_LSE.Text;
+
+            foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
             {
-                var result = MessageBox.Show("Удалить выбранную строку?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
+                if (row.IsNewRow) continue;
+
+                bool isVisible = true;
+
+                string rowPos = row.Cells[4].Value?.ToString();
+                if (selectedPos != "Все" && rowPos != selectedPos)
                 {
-                    dataGridViewOut_LSE.Rows.Remove(dataGridViewOut_LSE.CurrentRow);
-                    UpdateStatistics_LSE();
-                    UpdateChart_LSE();
+                    isVisible = false;
                 }
+
+                string rowDept = row.Cells[5].Value?.ToString();
+                if (isVisible && selectedDept != "Все" && rowDept != selectedDept)
+                {
+                    isVisible = false;
+                }
+
+                row.Visible = isVisible;
             }
         }
 
@@ -160,54 +211,100 @@ namespace Project.V11
             }
         }
 
-        private void buttonHelp_LSE_Click(object sender, EventArgs e)
+        private void buttonAdd_LSE_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Программа: Отдел кадров\nРазработчик: Ляпин С.Е.\nВерсия: 1.0\n\nРуководство:\nИспользуйте кнопки меню для загрузки, изменения, поиска и сохранения данных. График и статистика строится автоматически по данным оклада.", "О программе", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            dataGridViewOut_LSE.Rows.Add();
+            ResetFilters();
+        }
+
+        private void buttonDelete_LSE_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewOut_LSE.CurrentRow != null && !dataGridViewOut_LSE.CurrentRow.IsNewRow)
+            {
+                var result = MessageBox.Show("Удалить выбранную строку?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    dataGridViewOut_LSE.Rows.Remove(dataGridViewOut_LSE.CurrentRow);
+                    ResetFilters();
+                    UpdateStatistics_LSE();
+                    UpdateChart_LSE();
+                    UpdateFilters_LSE();
+                }
+            }
+        }
+
+        private void UpdateFilters_LSE()
+        {
+            comboBoxPosition_LSE.Items.Clear();
+            comboBoxDepartment_LSE.Items.Clear();
+            comboBoxPosition_LSE.Items.Add("Все");
+            comboBoxDepartment_LSE.Items.Add("Все");
+            comboBoxPosition_LSE.SelectedIndex = 0;
+            comboBoxDepartment_LSE.SelectedIndex = 0;
+
+            foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                var posValue = row.Cells[4].Value?.ToString();
+                if (posValue != null && !comboBoxPosition_LSE.Items.Contains(posValue))
+                {
+                    comboBoxPosition_LSE.Items.Add(posValue);
+                }
+
+                var deptValue = row.Cells[5].Value?.ToString();
+                if (deptValue != null && !comboBoxDepartment_LSE.Items.Contains(deptValue))
+                {
+                    comboBoxDepartment_LSE.Items.Add(deptValue);
+                }
+            }
         }
 
         private void UpdateStatistics_LSE()
         {
             try
             {
-                double sum = 0;
-                double max = double.MinValue;
-                double min = double.MaxValue;
-                int count = 0;
-
                 int salaryColIndex = -1;
                 foreach (DataGridViewColumn col in dataGridViewOut_LSE.Columns)
                 {
-                    if (col.HeaderText.ToLower().Contains("оклад")) salaryColIndex = col.Index;
-                }
-
-                if (salaryColIndex != -1)
-                {
-                    for (int i = 0; i < dataGridViewOut_LSE.Rows.Count; i++)
+                    if (col.HeaderText.ToLower().Contains("оклад"))
                     {
-                        var cellValue = dataGridViewOut_LSE.Rows[i].Cells[salaryColIndex].Value;
-                        if (cellValue != null && double.TryParse(cellValue.ToString(), out double salary))
-                        {
-                            sum += salary;
-                            if (salary > max) max = salary;
-                            if (salary < min) min = salary;
-                            count++;
-                        }
+                        salaryColIndex = col.Index;
+                        break;
                     }
                 }
 
-                if (count > 0)
-                {
-                    string stats = $"Сотрудников: {count}\n" +
-                                   $"Средний оклад: {Math.Round(sum / count, 2)} руб.\n" +
-                                   $"Мин: {min} руб. | Макс: {max} руб.";
+                if (salaryColIndex == -1) return;
 
-                    labelStats_LSE.Text = stats;
+                List<double> salaryList = new List<double>();
+
+                for (int i = 0; i < dataGridViewOut_LSE.Rows.Count; i++)
+                {
+                    var cellValue = dataGridViewOut_LSE.Rows[i].Cells[salaryColIndex].Value;
+
+                    if (cellValue != null && double.TryParse(cellValue.ToString(), out double salary))
+                    {
+                        salaryList.Add(salary);
+                    }
                 }
+
+                if (salaryList.Count == 0)
+                {
+                    labelStats_LSE.Text = "";
+                    return;
+                }
+
+                var stats = ds.CalculateStatistics(salaryList.ToArray());
+
+                labelStats_LSE.Text = $"Сотрудников: {stats.Count}\n" +
+                                      $"Средний оклад: {stats.Average} руб.\n" +
+                                      $"Мин: {stats.Min} руб. | Макс: {stats.Max} руб.";
             }
             catch
             {
             }
         }
+
 
         private void UpdateChart_LSE()
         {
@@ -274,23 +371,15 @@ namespace Project.V11
             chartDiag_LSE.Model = model;
         }
 
-        private void dataGridViewOut_LSE_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void ResetFilters()
         {
-            UpdateStatistics_LSE();
-            UpdateChart_LSE();
-        }
+            textBoxSearch_LSE.Text = "";
+            comboBoxDepartment_LSE.Text = "Все";
+            comboBoxPosition_LSE.Text = "Все";
 
-        private void buttonSaveStat_LSE_Click(object sender, EventArgs e)
-        {
-            using var saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "PNG Image|*.png|PDF File|*.pdf";
-            saveFileDialog.FileName = "Chart_LSE.png";
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
             {
-                var pngExporter = new PngExporter { Width = 800, Height = 600 };
-                pngExporter.ExportToFile(chartDiag_LSE.Model, saveFileDialog.FileName);
-                MessageBox.Show("График успешно сохранен!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                row.Visible = true;
             }
         }
     }
