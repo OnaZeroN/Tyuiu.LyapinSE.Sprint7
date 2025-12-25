@@ -21,21 +21,5 @@
             }
             return array;
         }
-
-        public double GetAverageSalary(string[,] data)
-        {
-            double sum = 0;
-            int count = 0;
-
-            for (int i = 1; i < data.GetLength(0); i++)
-            {
-                if (double.TryParse(data[i, 6], out double salary))
-                {
-                    sum += salary;
-                    count++;
-                }
-            }
-            return count > 0 ? Math.Round(sum / count, 2) : 0;
-        }
     }
 }
