@@ -164,52 +164,53 @@ namespace Project.V11
 
         private void buttonApplyFilter_Click(object sender, EventArgs e)
         {
-            string selectedPos = comboBoxPosition_LSE.Text;
-            string selectedDept = comboBoxDepartment_LSE.Text;
-
-            foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                bool isVisible = true;
-
-                string rowPos = row.Cells[4].Value?.ToString();
-                if (selectedPos != "Все" && rowPos != selectedPos)
-                {
-                    isVisible = false;
-                }
-
-                string rowDept = row.Cells[5].Value?.ToString();
-                if (isVisible && selectedDept != "Все" && rowDept != selectedDept)
-                {
-                    isVisible = false;
-                }
-
-                row.Visible = isVisible;
-            }
+            applyComplexFilter();
         }
 
         private void buttonSearch_LSE_Click(object sender, EventArgs e)
         {
-            string searchValue = textBoxSearch_LSE.Text.ToLower();
+            applyComplexFilter();
+        }
+
+        private void applyComplexFilter()
+        {
+            string selectedPos = comboBoxPosition_LSE.Text;
+            string selectedDept = comboBoxDepartment_LSE.Text;
+            string searchValue = textBoxSearch_LSE.Text.Trim().ToLower();
 
             foreach (DataGridViewRow row in dataGridViewOut_LSE.Rows)
             {
                 if (row.IsNewRow) continue;
-                bool visible = false;
 
-                for (int i = 0; i < dataGridViewOut_LSE.Columns.Count; i++)
+                string rowPos = row.Cells[4].Value?.ToString();
+                bool isPosMatch = (selectedPos == "Все" || selectedPos == "" || rowPos == selectedPos);
+
+                string rowDept = row.Cells[5].Value?.ToString();
+                bool isDeptMatch = (selectedDept == "Все" || selectedDept == "" || rowDept == selectedDept);
+
+                bool isSearchMatch = false;
+
+                if (string.IsNullOrEmpty(searchValue))
                 {
-                    if (row.Cells[i].Value != null &&
-                        row.Cells[i].Value.ToString().ToLower().Contains(searchValue))
+                    isSearchMatch = true;
+                }
+                else
+                {
+                    for (int i = 0; i < dataGridViewOut_LSE.Columns.Count; i++)
                     {
-                        visible = true;
-                        break;
+                        if (row.Cells[i].Value != null &&
+                            row.Cells[i].Value.ToString().ToLower().Contains(searchValue))
+                        {
+                            isSearchMatch = true;
+                            break; 
+                        }
                     }
                 }
-                row.Visible = visible;
+
+                row.Visible = isPosMatch && isDeptMatch && isSearchMatch;
             }
         }
+
 
         private void buttonAdd_LSE_Click(object sender, EventArgs e)
         {
