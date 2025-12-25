@@ -26,7 +26,7 @@ namespace Project.V11.Lib
 
         public void SaveData(string path, string[,] data)
         {
-            StringBuilder strBuilder = new StringBuilder();
+            StringBuilder strBuilder = new();
 
             int rows = data.GetLength(0);
             int cols = data.GetLength(1);
@@ -36,10 +36,13 @@ namespace Project.V11.Lib
                 string str = "";
                 for (int j = 0; j < cols; j++)
                 {
-                    str += data[i, j] + ";";
+                    str += data[i, j];
+                    if (j < cols - 1)
+                    {
+                        str += ";";
+                    }
                 }
 
-                str = str.TrimEnd(';');
                 strBuilder.AppendLine(str);
             }
 
